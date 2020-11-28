@@ -6,6 +6,7 @@
 #include "core/host_display.h"
 #include "core/settings.h"
 #include "core/system.h"
+#include "debuggerwindow.h"
 #include "frontend-common/game_list.h"
 #include "gamelistsettingswidget.h"
 #include "gamelistwidget.h"
@@ -310,6 +311,12 @@ void MainWindow::onEmulationStopped()
   {
     delete m_cheat_manager_dialog;
     m_cheat_manager_dialog = nullptr;
+  }
+
+  if (m_debugger_window)
+  {
+    delete m_debugger_window;
+    m_debugger_window = nullptr;
   }
 }
 
@@ -761,6 +768,7 @@ void MainWindow::updateEmulationActions(bool starting, bool running)
   m_ui.menuChangeDisc->setDisabled(starting || !running);
   m_ui.menuCheats->setDisabled(starting || !running);
   m_ui.actionCheatManager->setDisabled(starting || !running);
+  m_ui.actionDebugger->setDisabled(starting || !running);
 
   m_ui.actionSaveState->setDisabled(starting || !running);
   m_ui.menuSaveState->setDisabled(starting || !running);
@@ -899,6 +907,7 @@ void MainWindow::connectSignals()
   connect(m_ui.actionCheckForUpdates, &QAction::triggered, this, &MainWindow::onCheckForUpdatesActionTriggered);
   connect(m_ui.actionMemory_Card_Editor, &QAction::triggered, this, &MainWindow::onToolsMemoryCardEditorTriggered);
   connect(m_ui.actionCheatManager, &QAction::triggered, this, &MainWindow::onToolsCheatManagerTriggered);
+  connect(m_ui.actionDebugger, &QAction::triggered, this, &MainWindow::onToolsDebuggerTriggered);
   connect(m_ui.actionOpenDataDirectory, &QAction::triggered, this, &MainWindow::onToolsOpenDataDirectoryTriggered);
   connect(m_ui.actionGridViewShowTitles, &QAction::triggered, m_game_list_widget, &GameListWidget::setShowCoverTitles);
   connect(m_ui.actionGridViewZoomIn, &QAction::triggered, m_game_list_widget, [this]() {
@@ -1323,6 +1332,16 @@ void MainWindow::onToolsCheatManagerTriggered()
 
   m_cheat_manager_dialog->setModal(false);
   m_cheat_manager_dialog->show();
+}
+
+void MainWindow::onToolsDebuggerTriggered()
+{
+  if (!m_debugger_window)
+    m_debugger_window = new DebuggerWindow(this);
+
+  // m_debugger_dialog->setModal(false);
+  m_debugger_window->show();
+  m_host_interface->pauseSystem(true);
 }
 
 void MainWindow::onToolsOpenDataDirectoryTriggered()

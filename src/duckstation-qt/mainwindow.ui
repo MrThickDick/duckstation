@@ -216,6 +216,7 @@
     </property>
     <addaction name="actionMemory_Card_Editor"/>
     <addaction name="actionCheatManager"/>
+    <addaction name="actionDebugger" />
     <addaction name="separator"/>
     <addaction name="actionOpenDataDirectory"/>
    </widget>
@@ -734,6 +735,11 @@
   <action name="actionCheatManager">
    <property name="text">
     <string>C&amp;heat Manager</string>
+   </property>
+  </action>
+  <action name="actionDebugger">
+   <property name="text">
+    <string>D&amp;ebugger</string>
    </property>
   </action>
   <action name="actionViewGameGrid">

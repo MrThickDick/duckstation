@@ -20,6 +20,7 @@
 #include "timers.h"
 #include <cstdio>
 #include <tuple>
+#include <utility>
 Log_SetChannel(Bus);
 
 namespace Bus {
@@ -563,6 +564,41 @@ bool HasCodePagesInRange(PhysicalMemoryAddress start_address, u32 size)
   }
 
   return false;
+}
+
+std::optional<CodeRegion> GetCodeRegionForAddress(PhysicalMemoryAddress address)
+{
+  if (address < RAM_SIZE)
+    return CodeRegion::RAM;
+  else if (address < RAM_MIRROR_END)
+    return static_cast<CodeRegion>(static_cast<u32>(CodeRegion::RAM) + (address / RAM_SIZE));
+  else if (address >= EXP1_BASE && address < (EXP1_BASE + EXP1_SIZE))
+    return CodeRegion::EXP1;
+  else if (address >= BIOS_BASE && address < (BIOS_BASE + BIOS_SIZE))
+    return CodeRegion::BIOS;
+
+  return std::nullopt;
+}
+
+static constexpr std::array<std::pair<PhysicalMemoryAddress, PhysicalMemoryAddress>,
+                            static_cast<u32>(CodeRegion::Count)>
+  s_code_region_ranges = {{
+    {0, RAM_SIZE},
+    {RAM_SIZE, RAM_SIZE * 2},
+    {RAM_SIZE * 2, RAM_SIZE * 3},
+    {RAM_SIZE * 3, RAM_MIRROR_END},
+    {EXP1_BASE, EXP1_BASE + EXP1_SIZE},
+    {BIOS_BASE, BIOS_BASE + BIOS_SIZE},
+  }};
+
+u32 GetCodeRegionStart(CodeRegion region)
+{
+  return s_code_region_ranges[static_cast<u32>(region)].first;
+}
+
+u32 GetCodeRegionEnd(CodeRegion region)
+{
+  return s_code_region_ranges[static_cast<u32>(region)].second;
 }
 
 static TickCount DoInvalidAccess(MemoryAccessType type, MemoryAccessSize size, PhysicalMemoryAddress address,
@@ -1569,6 +1605,7 @@ bool SafeReadInstruction(VirtualMemoryAddress addr, u32* value)
     case 0x04: // KSEG0 - physical memory cached
     case 0x05: // KSEG1 - physical memory uncached
     {
+      // TODO: Check icache.
       return DoInstructionRead<false, false, 1, false>(addr, value);
     }
 

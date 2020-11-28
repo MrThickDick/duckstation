@@ -65,12 +65,18 @@
     <ClCompile Include="cheatcodeeditordialog.cpp" />
     <ClCompile Include="$(IntDir)moc_cheatmanagerdialog.cpp" />
     <ClCompile Include="$(IntDir)moc_cheatcodeeditordialog.cpp" />
+    <ClCompile Include="debuggermodels.cpp" />
+    <ClCompile Include="$(IntDir)moc_debuggerdialog.cpp" />
+    <ClCompile Include="$(IntDir)moc_debuggermodels.cpp" />
+    <ClCompile Include="debuggerdialog.cpp" />
+    <ClCompile Include="memoryviewwidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="qtutils.h" />
     <ClInclude Include="settingwidgetbinder.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="inputbindingmonitor.h" />
+    <ClInclude Include="memoryviewwidget.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
@@ -111,6 +117,8 @@
     <QtMoc Include="postprocessingsettingswidget.h" />
     <QtMoc Include="cheatmanagerdialog.h" />
     <QtMoc Include="cheatcodeeditordialog.h" />
+    <QtMoc Include="debuggermodels.h" />
+    <QtMoc Include="debuggerdialog.h" />
   </ItemGroup>
   <ItemGroup>
     <QtUi Include="consolesettingswidget.ui" />
@@ -132,6 +140,7 @@
     <QtUi Include="memorycardeditordialog.ui" />
     <QtUi Include="cheatmanagerdialog.ui" />
     <QtUi Include="cheatcodeeditordialog.ui" />
+    <QtUi Include="debuggerdialog.ui" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="qt5.natvis" />
@@ -158,23 +167,11 @@
     <QtTs Include="translations\duckstation-qt_zh-cn.ts">
       <Filter>translations</Filter>
     </QtTs>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="translations\duckstation-qt_es.ts">
-      <Filter>translations</Filter>
-    </None>
-    <None Include="translations\duckstation-qt_it.ts">
-      <Filter>translations</Filter>
-    </None>
-    <None Include="translations\duckstation-qt_ru.ts">
-      <Filter>translations</Filter>
-    </None>
-    <None Include="translations\duckstation-qt_nl.ts">
-      <Filter>translations</Filter>
-    </None>
-    <None Include="translations\duckstation-qt_fr.ts">
-      <Filter>translations</Filter>
-    </None>
+    <QtTs Include="translations\duckstation-qt_es.ts" />
+    <QtTs Include="translations\duckstation-qt_fr.ts" />
+    <QtTs Include="translations\duckstation-qt_it.ts" />
+    <QtTs Include="translations\duckstation-qt_nl.ts" />
+    <QtTs Include="translations\duckstation-qt_ru.ts" />
   </ItemGroup>
   <ItemGroup>
     <QtResource Include="resources\resources.qrc">

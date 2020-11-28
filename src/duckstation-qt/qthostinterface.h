@@ -51,6 +51,7 @@ public:
 public Q_SLOTS:
   void ReportError(const char* message) override;
   void ReportMessage(const char* message) override;
+  void ReportDebuggerMessage(const char* message) override;
   bool ConfirmMessage(const char* message) override;
 
 public:
@@ -120,6 +121,7 @@ public:
 Q_SIGNALS:
   void errorReported(const QString& message);
   void messageReported(const QString& message);
+  void debuggerMessageReported(const QString& message);
   bool messageConfirmed(const QString& message);
   void emulationStarting();
   void emulationStarted();
@@ -163,6 +165,7 @@ public Q_SLOTS:
   void setAudioOutputMuted(bool muted);
   void startDumpingAudio();
   void stopDumpingAudio();
+  void singleStepCPU();
   void dumpRAM(const QString& filename);
   void saveScreenshot();
   void redrawDisplayWindow();

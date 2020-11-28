@@ -160,6 +160,13 @@ void QtHostInterface::ReportMessage(const char* message)
   emit messageReported(QString::fromUtf8(message));
 }
 
+void QtHostInterface::ReportDebuggerMessage(const char* message)
+{
+  HostInterface::ReportDebuggerMessage(message);
+
+  emit debuggerMessageReported(QString::fromUtf8(message));
+}
+
 bool QtHostInterface::ConfirmMessage(const char* message)
 {
   const bool was_fullscreen = m_is_fullscreen;
@@ -1166,7 +1173,8 @@ void QtHostInterface::setAudioOutputVolume(int volume, int fast_forward_volume)
 {
   if (!isOnWorkerThread())
   {
-    QMetaObject::invokeMethod(this, "setAudioOutputVolume", Q_ARG(int, volume), Q_ARG(int, fast_forward_volume));
+    QMetaObject::invokeMethod(this, "setAudioOutputVolume", Qt::QueuedConnection, Q_ARG(int, volume),
+                              Q_ARG(int, fast_forward_volume));
     return;
   }
 
@@ -1181,7 +1189,7 @@ void QtHostInterface::setAudioOutputMuted(bool muted)
 {
   if (!isOnWorkerThread())
   {
-    QMetaObject::invokeMethod(this, "setAudioOutputMuted", Q_ARG(bool, muted));
+    QMetaObject::invokeMethod(this, "setAudioOutputMuted", Qt::QueuedConnection, Q_ARG(bool, muted));
     return;
   }
 
@@ -1195,7 +1203,7 @@ void QtHostInterface::startDumpingAudio()
 {
   if (!isOnWorkerThread())
   {
-    QMetaObject::invokeMethod(this, "startDumpingAudio");
+    QMetaObject::invokeMethod(this, "startDumpingAudio", Qt::QueuedConnection);
     return;
   }
 
@@ -1206,11 +1214,26 @@ void QtHostInterface::stopDumpingAudio()
 {
   if (!isOnWorkerThread())
   {
-    QMetaObject::invokeMethod(this, "stopDumpingAudio");
+    QMetaObject::invokeMethod(this, "stopDumpingAudio", Qt::QueuedConnection);
     return;
   }
 
   StopDumpingAudio();
+}
+
+void QtHostInterface::singleStepCPU()
+{
+  if (!isOnWorkerThread())
+  {
+    QMetaObject::invokeMethod(this, "singleStepCPU", Qt::BlockingQueuedConnection);
+    return;
+  }
+
+  if (!System::IsValid())
+    return;
+
+  System::SingleStepCPU();
+  renderDisplay();
 }
 
 void QtHostInterface::dumpRAM(const QString& filename)

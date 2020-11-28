@@ -53,7 +53,7 @@ public:
 
   virtual bool BootSystem(const SystemBootParameters& parameters);
   virtual void PowerOffSystem();
-
+  virtual void PauseSystem(bool paused);
   virtual void ResetSystem();
   virtual void DestroySystem();
 
@@ -62,10 +62,12 @@ public:
 
   virtual void ReportError(const char* message);
   virtual void ReportMessage(const char* message);
+  virtual void ReportDebuggerMessage(const char* message);
   virtual bool ConfirmMessage(const char* message);
 
   void ReportFormattedError(const char* format, ...);
   void ReportFormattedMessage(const char* format, ...);
+  void ReportFormattedDebuggerMessage(const char* format, ...);
   bool ConfirmFormattedMessage(const char* format, ...);
 
   /// Adds OSD messages, duration is in seconds.
@@ -147,6 +149,7 @@ protected:
   virtual s32 GetAudioOutputVolume() const;
 
   virtual void OnSystemCreated();
+  virtual void OnSystemPaused(bool paused);
   virtual void OnSystemDestroyed();
   virtual void OnSystemStateSaved(bool global, s32 slot);
   virtual void OnControllerTypeChanged(u32 slot);

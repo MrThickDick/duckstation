@@ -3,6 +3,7 @@
 #include "common/memory_arena.h"
 #include "types.h"
 #include <array>
+#include <optional>
 #include <bitset>
 #include <string>
 #include <vector>
@@ -148,5 +149,20 @@ ALWAYS_INLINE TickCount GetDMARAMTickCount(u32 word_count)
   // plus 6 waitstates, ie. 7 cycles in total).
   return static_cast<TickCount>(word_count + ((word_count + 15) / 16));
 }
+
+enum class CodeRegion
+{
+  RAM,
+  RAMMirror1,
+  RAMMirror2,
+  RAMMirror3,
+  EXP1,
+  BIOS,
+  Count
+};
+
+std::optional<CodeRegion> GetCodeRegionForAddress(PhysicalMemoryAddress address);
+u32 GetCodeRegionStart(CodeRegion region);
+u32 GetCodeRegionEnd(CodeRegion region);
 
 } // namespace Bus
